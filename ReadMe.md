@@ -1,9 +1,5 @@
-Absolutely! Let’s make a **full, beginner-friendly README.md** that explains your code **line by line**, in Markdown format. This will be perfect for your submission.
-
----
-
 ````markdown
-# 🧙 Express CRUD API - Line by Line Explanation
+#  Express CRUD API - Line by Line Explanation
 
 This project is a **simple CRUD API** built with **Node.js** and **Express.js**. It allows you to **Create, Read, Update, and Delete** users stored in a JavaScript array (fake database). This README explains the code **line by line**.
 
