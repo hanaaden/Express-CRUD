@@ -1,4 +1,4 @@
-````markdown
+
 #  Express CRUD API - Line by Line Explanation
 
 This project is a **simple CRUD API** built with **Node.js** and **Express.js**. It allows you to **Create, Read, Update, and Delete** users stored in a JavaScript array (fake database). This README explains the code **line by line**.
@@ -10,13 +10,11 @@ This project is a **simple CRUD API** built with **Node.js** and **Express.js**.
 ```bash
 npm init -y        
 npm install express 
-````
 
+```
 Create a file called `server.js` and start coding.
 
 ---
-
-## **Code Explanation**
 
 ```js
 const express = require("express")
