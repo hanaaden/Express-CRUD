@@ -21,7 +21,7 @@ app.post("/users" , (req ,res)=>{
     res.status(201).json(newUser)
 })
 
-app.put("/users:id" , (req ,res)=>{
+app.put("/users/:id" , (req ,res)=>{
     const userId = parseInt(req.params.id)
     const user = users.find(u=>u.id === userId)
     if(!user){
@@ -34,8 +34,8 @@ app.put("/users:id" , (req ,res)=>{
 app.delete("/users/:id" ,(req ,res)=>{
     const userId = parseInt(req.params.id)
     const userIndex = users.findIndex(u => u.id === userId)
-    if(userId === -1){
-        return res.status(303).json({messege : "user not found"})
+    if(userIndex === -1){
+        return res.status(404).json({messege : "user not found"})
 
     }
     users.splice(userIndex , 1)
