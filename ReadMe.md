@@ -1,189 +1,210 @@
+GET, POST, PUT,DELETE in express
+ Hana Aden documentation
 
-#  Express CRUD API - Line by Line Explanation
+Hey I am Hana Aden today I wanna guide you doing the 4 magic words of express 
+1: get : use that when you like to get/read something like data from the server side 
+2: put : is update existing data on the server side
+3: delete : is the deleting the data on server side 
+4 : post : adding or creating data to you server side data like database
 
-This project is a **simple CRUD API** built with **Node.js** and **Express.js**. It allows you to **Create, Read, Update, and Delete** users stored in a JavaScript array (fake database). This README explains the code **line by line**.
 
----
+The first thing that I tried to understand is What is express ?
+Express is Framework that handles HTTP request in simple way you can say it is a tool that helps make a server in node js 
+It is like helper that handles requests and responses between  clients to servers
 
-## **Project Setup**
-
-```bash
-npm init -y        
-npm install express 
-
+Since you understand that let we start 
+First I created a folder and I named it express CRUD after that I created a file inside that folder and I named it server.js 
+I started coding immediately the first line const express = require(“express”)  what happened was Vs code saying wait “who is express” then I figured out that I should install express in my folder 
+Better for you to do so now write this command as I did 
+In my terminal :
 ```
-Create a file called `server.js` and start coding.
-
----
-
-```js
-const express = require("express")
+PS D:\Hana\online study\visual st\Express crud>npm init -y 
+PS D:\Hana\online study\visual st\Express crud>npm install express
 ```
-
-* Imports the Express library to create a server and handle HTTP requests.
-
+See now you see the magic you got the package json in your Folder as do I after that VS code recognized the express 
+Now I have express installed package json installed and my first line of code 
+const express = require(“express”) 
+Now I added 
+Const app = express( ) that means I created express app ahead the third line is app.use(express.json( ))  means any time that some sends a JSON data to the server side please change it into javaScript object so I can send responses and use it as req.body without this line the req.body will stay undefined 
+Now we have our first 3 lines 
 ```js
-const app = express()
+Const express = require(“express”)
+Const app = express( )
+app.use(express.json( ))
 ```
-
-* Creates an Express application instance called `app`.
-* This `app` will handle all routes and middleware.
-
+Let we go ahead what we are waiting we need a data so let we create a fake database by our selves 
 ```js
-app.use(express.json())
-```
-
-* Middleware that allows Express to parse incoming JSON data from the request body.
-* Essential for **POST** and **PUT** requests.
-
-```js
-let users = [
-    { id: 1, name: "Jane" },
-    { id: 2, name: "John" }
+Let users = [
+{id : 1 , name : “John”},
+{id :2 , name : “Jane”}
 ]
 ```
+As Basic javaScript the word [LET] allowing as the changes means if we make const the PUT in express is impossible as well as POST and what we have is array inside it a objects so that is our database by now 
 
-* An **in-memory array** acting as a fake database.
-* Each object represents a user with `id` and `name`.
+Now let we start the four words but before that we need to know or check if our server is running 
+So start the server
+app.listen(5000, ( )  => console.log(“the server is running on  port 5000”) ) 
 
----
-
-### **GET /users** - Read all users
-
+Let we prepare the postman 
+The postman is tool helps us to test our APIs you can directly send requests to you server side instead of building the frontend everytime
+Click new in your post man and paste the URL “http://localhost:5000/users”
+Before pasting like we do the get in our server side 
+Now above you  app.listen(5000, ( )  => console.log(“the server is running on  port 5000”) )  
+Create your POST GET PUT DELETE things 
+Let we fo the GET then code with me : 
 ```js
-app.get("/users", (req, res) => {
+app.get(“/users” , (req ,res)=>{
+res.json(users)
+}
+```
+Now you wonder what is req , res and “/users” the “/users” is route path that you add you api see  “http://localhost:5000/users”  now req(request) is all incoming information about the request the client made example req.body.name you will get name  and res(response) means is what you send to the client side 
+
+It get method see you send all users in your database to the client side that is why you used res
+
+No in your terminal : 
+PS D:\Hana\online study\visual st\Express crud> node server.js
+You have to get 
+the server is running on port 5000 
+
+Ok let we go the postman paste this URL “http://localhost:5000/users” choose get and click send 
+
+So you will get in your postman this 
+
+
+
+
+One my first mistake the postman was giving we error saying not found while now is giving me response look I figured our running the server always will gonna solve the problem 
+
+Now let me go to the POST 
+```js
+app.post(“/users” , (req ,res )=>{
+Const newUser = {
+id : users.length + 1 ,
+name :  req.body.name
+}
+users.push(newUser)
+res.status(201).json(newUser)
+}
+```
+EXPLANATION
+app.post : creates POST route  in express
+“/users” : this is URL path as you know so when someone sends request to http://localhost:5000/users this code will run 
+Users.length + 1 : automatically gives id
+req.body.name :  read the name requested in the body 
+And pushes into your user 
+
+Now go to your postman in this URL http://localhost:5000/users choose POST then body -> row then JSON 
+
+Choose body then row then JSON 
+And write 
+
+Click send 
+Now you see in your postman 
+
+Why we are not going back to get and see if our database is updated 
+
+
+See now I added a user 
+
+Let we go to PUT 
+As usual do but in our route we add ID so we have to get the user id that we are updating 
+```js
+app.post(“/users/:id” , (req ,res)=>{
+Const userId = parseInt(req.params.id)
+Const user = users.find(u=>u.id === userId)
+if(!user ) return res.status(404).json({messege: “user not found”})
+user.name = req.body.name
+res.json(user)
+}
+```
+Now in your postman copy the link http://localhost:5000/users/2  
+Choose PUT => Body =.> row => json 
+
+
+
+
+You will get in your post man 
+
+Now check again the get and see  the update 
+
+
+Now let we do the DELETE the only one that is remaining 
+```js
+app.delete(“/users/:id”){
+Const userId = parseInt(req.params.id)
+Const userIndex = users.findIndex(u=>u.id === userId)
+if (user.id === -1) return res.status(404).json({messege: “user not found”})
+users.splice(userIndex , 1)
+res.json({messege : “user deleted successfully”})
+}
+```
+
+Now our postman
+
+The output 
+
+Let we get our users 
+
+Hope this documentation helped as intended 
+
+
+
+FULL CODE 
+```js
+
+const express = require("express")
+const app = express()
+app.use(express.json())
+
+
+let users = [
+    {id: 1 , name : "Jane"},
+    {id: 2 , name : "John"}
+]
+
+
+
+
+app.get("/users" , (req ,res)=>{
     res.json(users)
 })
-```
 
-* `app.get("/users")` defines a GET route at `/users`.
-* `req` = incoming request object.
-* `res` = response object.
-* `res.json(users)` sends the `users` array as a JSON response.
-* **Purpose:** Retrieve all users.
 
----
-
-### **POST /users** - Create a new user
-
-```js
-app.post("/users", (req, res) => {
+app.post("/users" , (req ,res)=>{
     const newUser = {
-        id: users.length + 1,
-        name: req.body.name
-    };
-    users.push(newUser);
+        id : users.length + 1 ,
+        name : req.body.name
+    }
+    users.push(newUser)
     res.status(201).json(newUser)
 })
-```
 
-**Line by line:**
 
-1. `app.post("/users", ...)` → defines a POST route to create a new user.
-2. `const newUser = {...}` → creates a new user object with:
-
-   * `id` → next number in the array
-   * `name` → value from JSON body sent in Postman (`req.body.name`)
-3. `users.push(newUser)` → adds the new user to the array.
-4. `res.status(201).json(newUser)` → returns the newly created user and sends HTTP status 201 (Created).
-
-**Purpose:** Add a new user to the list.
-
----
-
-### **PUT /users/:id** - Update an existing user
-
-```js
-app.put("/users/:id", (req, res) => {
+app.put("/users:id" , (req ,res)=>{
     const userId = parseInt(req.params.id)
-    const user = users.find(u => u.id === userId)
-    if (!user) return res.status(404).json({ message: "User not found" })
+    const user = users.find(u=>u.id === userId)
+    if(!user){
+    return res.status(404).json({messege : "user not found"})
+    }
     user.name = req.body.name
     res.json(user)
 })
-```
 
-**Line by line:**
 
-1. `:id` → route parameter for the user ID.
-2. `parseInt(req.params.id)` → converts the string ID from the URL to a number.
-3. `users.find(u => u.id === userId)` → searches for the user object in the array.
-4. `if (!user)` → if user doesn’t exist, return 404 error.
-5. `user.name = req.body.name` → update the user’s name.
-6. `res.json(user)` → return the updated user object.
-
-**Purpose:** Modify an existing user's information.
-
----
-
-### **DELETE /users/:id** - Remove a user
-
-```js
-app.delete("/users/:id", (req, res) => {
+app.delete("/users/:id" ,(req ,res)=>{
     const userId = parseInt(req.params.id)
     const userIndex = users.findIndex(u => u.id === userId)
-    if (userIndex === -1) return res.status(404).json({ message: "User not found" })
-    users.splice(userIndex, 1)
-    res.json({ message: "User deleted successfully" })
+    if(userId === -1){
+        return res.status(303).json({messege : "user not found"})
+
+
+    }
+    users.splice(userIndex , 1)
+    res.json({messege : "deleted successfully"})
 })
-```
+app.listen(5000, ()=> console.log("server is running on port 5000"))
 
-**Line by line:**
-
-1. `req.params.id` → get ID from URL.
-2. `findIndex` → find the index of the user in the array.
-3. `if (userIndex === -1)` → return 404 if user not found.
-4. `users.splice(userIndex, 1)` → remove the user from the array.
-5. `res.json({ message: ... })` → return confirmation message.
-
-**Purpose:** Delete a user from the list.
-
----
-
-### **Starting the Server**
-
-```js
-app.listen(5000, () => console.log("the server is running on port 5000"))
-```
-
-* Starts the Express server on **port 5000**.
-* The callback logs a message confirming the server is running.
-
----
-
-## **Testing**
-
-* Use **Postman** to test all routes:
-
-  * GET `/users` → fetch all users
-  * POST `/users` → add new user
-  * PUT `/users/:id` → update user
-  * DELETE `/users/:id` → remove user
-
-* Remember: no extra spaces in URL (`/users%20` will fail).
-
----
-
-## **Key Learnings**
-
-* Understanding **CRUD operations** in Express.
-* Using **req.body** for POST/PUT and **req.params** for route parameters.
-* Importance of **express.json()** middleware.
-* Debugging common errors (`Cannot GET/POST /users`, trailing spaces in URLs).
-* Testing APIs effectively with Postman.
-
----
-
-### Summary
-
-This project started from **setting up Express**, adding a **fake database**, and implementing **GET, POST, PUT, DELETE routes**, with **line-by-line understanding of each part**.
-
-You now have a **fully working CRUD API** ready to use and expand for future projects.
-
----
-
- **Read the full documentation in this project:** [Link to this README](https://docs.google.com/document/d/1CcZaxHW8BjIlxweR_pLE6jlFVcA0qmfyCuQlOhftsos/edit?usp=sharing)
 
 ```
 
----
+to read more with postman screenshots [read more](https://docs.google.com/document/d/1xGPnU5ivGH-oKR0qJjV1ZhmIcE2IwWzwfPvNkCnNICg/edit?usp=sharing)
